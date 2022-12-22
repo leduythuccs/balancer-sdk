@@ -22,29 +22,17 @@ const balancer = new BalancerSDK(config);
 Uses SDK to find spot price for pair in specific pool.
 */
 async function getSpotPricePool() {
-  const wethDaiPoolId =
-    '0x0b09dea16768f0799065c475be02919503cb2a3500020000000000000000001a';
-  const daiWethPool = await balancer.pools.find(wethDaiPoolId);
-  if (!daiWethPool)
+  const poolId =
+    '0x8e85e97ed19c0fa13b2549309965291fbbc0048b0000000000000000000003ba';
+  const phantomStablePool = await balancer.pools.find(poolId);
+  if (!phantomStablePool)
     throw new BalancerError(BalancerErrorCode.POOL_DOESNT_EXIST);
 
-  const spotPriceEthDai = await daiWethPool.calcSpotPrice(
-    ADDRESSES[network].DAI.address,
-    ADDRESSES[network].WETH.address
+  const spotPriceBptWsteth = await phantomStablePool.calcSpotPrice(
+    ADDRESSES[network].wSTETH.address,
+    '0x8e85e97ed19c0fa13b2549309965291fbbc0048b',
   );
-  console.log(spotPriceEthDai.toString());
-
-  const balDaiPoolId =
-    '0x4626d81b3a1711beb79f4cecff2413886d461677000200000000000000000011';
-
-  const balDaiPool = await balancer.pools.find(balDaiPoolId);
-  if (!balDaiPool) throw new BalancerError(BalancerErrorCode.POOL_DOESNT_EXIST);
-
-  const spotPriceBalDai = await balDaiPool.calcSpotPrice(
-    ADDRESSES[network].DAI.address,
-    ADDRESSES[network].BAL.address
-  );
-  console.log(spotPriceBalDai.toString());
+  console.log(spotPriceBptWsteth.toString());
 }
 
 /*
@@ -70,4 +58,4 @@ async function getSpotPriceMostLiquid() {
 
 // yarn examples:run ./examples/spotPrice.ts
 getSpotPricePool();
-getSpotPriceMostLiquid();
+// getSpotPriceMostLiquid();
